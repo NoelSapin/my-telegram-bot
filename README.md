@@ -1,94 +1,106 @@
 # Telegram Timezone Bot
 
-Этот бот позволяет пользователям выбирать континент, страну и часовой пояс через inline-клавиатуру и получать текущее время в выбранном часовом поясе. Кроме того, бот поддерживает обработку текстовых сообщений с вводом времени (например, "18:00") и вывод ближайших к нему таймзон.
+## Описание
+Этот Telegram-бот позволяет пользователям выбирать континенты, страны и часовые пояса, а также узнавать текущее время в выбранной зоне. Бот написан на Python с использованием библиотеки `python-telegram-bot` и упакован в Docker для удобного развертывания.
 
-## Функционал
-
-- **Выбор часового пояса через меню:**  
-  Пользователь может выбрать континент, затем страну и, наконец, город/таймзону, после чего бот отобразит текущее время в выбранном часовом поясе.
-
-- **Поиск ближайших таймзон по введённому времени:**  
-  Если пользователь отправляет сообщение с временем (например, "18:00"), бот находит таймзоны, где текущее время максимально близко к указанному.
-
-- **Удобная навигация:**  
-  Inline-клавиатура с кнопкой «Назад» позволяет легко возвращаться к предыдущим уровням выбора.
-
-## Технологии
-
-- Python 3.x
-- [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-- [pytz](http://pytz.sourceforge.net/)
-- [pycountry](https://pypi.org/project/pycountry/)
-- [pycountry-convert](https://pypi.org/project/pycountry-convert/)
-- Docker
+---
 
 ## Установка и запуск
 
-### Локальный запуск
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/your-repo/telegram-timezone-bot.git
+cd telegram-timezone-bot
+```
 
-1. **Клонируйте репозиторий:**
+### 2. Установка зависимостей (локально)
+Если хотите запустить бота без Docker, установите зависимости вручную:
+```bash
+pip install -r requirements.txt
+```
 
-   ```bash
-   git clone <URL_репозитория>
-   cd <название_проекта> 
-
-2.  Создайте виртуальное окружение (опционально):
-
-    python3 -m venv venv
-   source venv/bin/activate
-
-3. Установите зависимости:
-
-    pip install -r requirements.txt
-
-4. Настройте токен:
-
-В файле bot.py замените значение переменной TOKEN на ваш Telegram API токен.
-
-5. Запустите бота:
-
+### 3. Запуск бота (локально)
+```bash
 python bot.py
- ### Запуск с Docker
-1. Создайте файл Dockerfile (если его ещё нет) с таким содержимым:
+```
 
-FROM python:3.10-slim
+---
 
-# Устанавливаем рабочую директорию в контейнере
-WORKDIR /app
+## Использование Docker
 
-# Копируем файл зависимостей и устанавливаем их
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+### 1. Установка Docker (если не установлен)
+```bash
+sudo apt update
+sudo apt install docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+```
 
-# Копируем весь исходный код в контейнер
-COPY . .
-
-# Запускаем бота
-CMD ["python", "bot.py"]
-
-2. Соберите Docker-образ:
-
+### 2. Сборка Docker-образа
+```bash
 docker build -t telegram-bot .
+```
 
-3. Запустите контейнер:
-
+### 3. Запуск контейнера
+```bash
 docker run -d --name telegram-bot-container telegram-bot
+```
 
-4. Просмотр логов контейнера:
-
+### 4. Просмотр логов контейнера
+```bash
 docker logs -f telegram-bot-container
-## Структура проекта
-Примерная структура проекта:
+```
 
-my-telegram-bot/
-├── bot.py
-├── Dockerfile
-├── requirements.txt
-└── README.md
+### 5. Остановка контейнера
+```bash
+docker stop telegram-bot-container
+```
 
-### Лицензия
-Этот проект распространяется под лицензией MIT. Подробнее см. в файле LICENSE.
+### 6. Перезапуск контейнера
+```bash
+docker start telegram-bot-container
+```
 
-## Контакты
-Если у вас возникнут вопросы или предложения, создайте issue в репозитории или свяжитесь с [noel440067@gmail.com].
+### 7. Удаление контейнера
+```bash
+docker rm -f telegram-bot-container
+```
+
+---
+
+## Переменные окружения
+Бот использует переменную окружения `TOKEN` для хранения API-токена Telegram. Можно передавать её при запуске контейнера:
+```bash
+docker run -d --name telegram-bot-container -e TOKEN="your-telegram-token" telegram-bot
+```
+
+Или создать `.env` файл с содержимым:
+```env
+TOKEN=your-telegram-token
+```
+Затем использовать его в Docker:
+```bash
+docker run --env-file .env -d --name telegram-bot-container telegram-bot
+```
+
+---
+
+## Файловая структура
+```
+telegram-timezone-bot/
+├── bot.py            # Исходный код бота
+├── requirements.txt   # Зависимости проекта
+├── Dockerfile        # Инструкция для сборки Docker-образа
+└── README.md         # Описание проекта
+```
+
+---
+
+## Контакты и поддержка
+Если у вас возникли вопросы или предложения, создайте issue в репозитории или свяжитесь с автором.
+
+---
+
+## Лицензия
+Этот проект распространяется без лицензии.
 
